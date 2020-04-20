@@ -4,39 +4,58 @@ const mariadb = require('mariadb')
 const mariaConf = require('./mariaConf')
 const SQL = require('./SQL')
 
+let id;
+
 test.before('Criando o pool de conexões', t => {
   const pool = mariadb.createPool(mariaConf)
   t.context.pool = pool
 })
 
+
 test.serial('novoLembrete', async t => {
-  const conn = await t.context.pool.getConnection()
+  const pool = t.context.pool
 
-  const resultado = await conn.query(SQL.novoLembrete, "mais um lembrete")
-
-  t.falsy(resultado)
+  const {
+    affectedRows,
+    insertId,
+    warningStatus
+  } = await pool.query(SQL.novoLembrete, 'todo1')
   
-  conn.release()
-})
+  id = insertId
 
-test.serial('faltaFazer', async t => {
-  const conn = await t.context.pool.getConnection()
-
-  const resultado = await conn.query('SELECT * FROM devmt.todo WHERE concluido = 0;')
-
-  return t.falsy(resultado)
+  t.falsy(warningStatus)
 })
 
 test.serial('concluir', async t => {
-  const conn = await t.context.pool.getConnection()
+  const pool = t.context.pool
+  
+  const {
+    affectedRows
+  } = await pool.query(SQL.concluir, id)
 
-  const resultado = await conn.query(SQL.concluir, 8)
+  t.is(affectedRows, 1)
+})
 
-  return t.falsy(resultado)
+test.serial('faltaFazer', async t => {
+  const pool = t.context.pool
+
+  const resultado = await pool.query(SQL.faltaFazer)
+
+  return t.is(resultado.length, 0)
+})
+
+test.serial('esquecer', async t => {
+  const pool = t.context.pool
+
+  const {
+    affectedRows
+  } = await pool.query(SQL.esquecer, id)
+
+  return t.is(affectedRows, 1)
 })
 
 test.after('Desligando conexões do banco', async t => {
-  const conn = await t.context.pool.getConnection()
-  await conn.query(SQL.limparTudo)
+  const pool = t.context.pool
+  await pool.query(SQL.limparTudo)
   await t.context.pool.end()
 })
