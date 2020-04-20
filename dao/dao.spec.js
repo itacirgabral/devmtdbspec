@@ -1,11 +1,13 @@
 const test = require('ava')
 const mariadb = require('mariadb')
 
-const mariaConf = require('./mariaConf')
-const SQL = require('./SQL')
-
 test.before('Criando o pool de conexões', t => {
-  const pool = mariadb.createPool(mariaConf)
+  const pool = mariadb.createPool({
+    user: 'devmt',
+    password: 'devmt',
+    database: 'devmt',
+    connectionLimit: 5
+  })
   t.context.pool = pool
 })
 
