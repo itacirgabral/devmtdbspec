@@ -27,7 +27,7 @@ docker container ls
 docker exec -it <tab> bash
 mysql -h 127.0.0.1 -u devmt -p
 show databases;
-use todo;
+use devmt;
 ```
 
 ## [wait-for](https://github.com/Eficode/wait-for) maria be up
