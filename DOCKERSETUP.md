@@ -18,7 +18,7 @@ docker run -d --rm -p 3306:3306 -e MYSQL_DATABASE=devmt -e MYSQL_RANDOM_ROOT_PAS
 
 ## Pingando o banco
 ```
-npm run test:dockersetup
+npm test
 ```
 
 ## Inspecionando a instância
