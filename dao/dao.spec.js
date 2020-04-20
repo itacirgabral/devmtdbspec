@@ -56,6 +56,6 @@ test.serial('esquecer', async t => {
 
 test.after('Desligando conexões do banco', async t => {
   const pool = t.context.pool
-  await pool.query(SQL.limparTudo)
+  await pool.query('DELETE FROM devmt.todo;')
   await t.context.pool.end()
 })
