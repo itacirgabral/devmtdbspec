@@ -2,12 +2,11 @@ const test = require('ava')
 const make_dao = require('../dao')
 
 const mariaConf = require('./mariaConf')
-const SQL = require('./SQL')
 
 let id;
 
 test.before('Criando o pool de conexões', t => {
-  t.context.dao = make_dao(mariaConf, SQL)
+  t.context.dao = make_dao(mariaConf)
 })
 
 
