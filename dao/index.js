@@ -1,16 +1,12 @@
-const mariadb = require('mariadb')
-const SQL = require('./SQL')
+const sgdb = require('./sgdb')
+const mock = require('./mock')
 
-const make_dao = mariaConf => {
-  const pool = mariadb.createPool(mariaConf)
-  const daoEntries = Object.entries(SQL)
-    .map(([key, value]) => ([
-      key,
-      (...params) => pool.query(SQL[key], ...params)
-    ])
-  )
+let make_dao
 
-  return Object.fromEntries(daoEntries)
+if (false) {
+  make_dao = sgdb
+} else {
+  make_dao = mock
 }
 
 module.exports = make_dao
